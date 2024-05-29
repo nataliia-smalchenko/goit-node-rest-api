@@ -1,7 +1,7 @@
 import Contact from "../models/Contact.js";
 
-function listContacts({ filter = {}, fields = "" }) {
-  return Contact.find(filter, fields);
+function listContacts(filter = {}) {
+  return Contact.find(filter);
 }
 
 function getContactById(contactId) {
@@ -20,10 +20,15 @@ function updateOneContact(contactId, data) {
   return Contact.findByIdAndUpdate(contactId, data);
 }
 
+function updateStatusContact(contactId, data) {
+  return Contact.findByIdAndUpdate(contactId, data);
+}
+
 export default {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateOneContact,
+  updateStatusContact,
 };
