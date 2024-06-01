@@ -5,11 +5,14 @@ import {
   updateContactSchema,
   updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
-import validateBody from "../decorators/validateBody.js";
-import validateId from "../decorators/validateObjectId.js";
-import isEmptyBody from "../decorators/isEmptyBody.js";
+import validateBody from "../middlewares/validateBody.js";
+import validateId from "../middlewares/validateObjectId.js";
+import isEmptyBody from "../middlewares/isEmptyBody.js";
+import authenticate from "../middlewares/authenticate.js";
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", contactsControllers.getAllContacts);
 
@@ -36,7 +39,7 @@ contactsRouter.patch(
   isEmptyBody,
   validateId,
   validateBody(updateStatusContactSchema),
-  contactsControllers.updateStatus
+  contactsControllers.updateContact
 );
 
 export default contactsRouter;

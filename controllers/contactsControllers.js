@@ -2,14 +2,16 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import HttpError from "../helpers/HttpError.js";
 import contactsService from "../services/contactsServices.js";
 
-const getAllContacts = async (_, res) => {
-  const result = await contactsService.listContacts();
+const getAllContacts = async (req, res) => {
+  const { _id: owner } = req.user;
+  const result = await contactsService.listContacts({ owner });
   res.json(result);
 };
 
 const getOneContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.getContactById(id);
+  const { _id: owner } = req.user;
+  const { id: _id } = req.params;
+  const result = await contactsService.getContact({ _id, owner });
   if (!result) {
     throw HttpError(404);
   }
@@ -17,8 +19,9 @@ const getOneContact = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.removeContact(id);
+  const { _id: owner } = req.user;
+  const { id: _id } = req.params;
+  const result = await contactsService.removeContact({ _id, owner });
   if (!result) {
     throw HttpError(404);
   }
@@ -26,22 +29,18 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const result = await contactsService.addContact(req.body);
+  const { _id: owner } = req.user;
+  const result = await contactsService.addContact({ ...req.body, owner });
   res.status(201).json(result);
 };
 
 const updateContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.updateOneContact(id, req.body);
-  if (!result) {
-    throw HttpError(404);
-  }
-  res.status(200).json(result);
-};
-
-const updateStatus = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.updateStatusContact(id, req.body);
+  const { _id: owner } = req.user;
+  const { id: _id } = req.params;
+  const result = await contactsService.updateOneContact(
+    { _id, owner },
+    req.body
+  );
   if (!result) {
     throw HttpError(404);
   }
@@ -54,5 +53,4 @@ export default {
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
-  updateStatus: ctrlWrapper(updateStatus),
 };

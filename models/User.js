@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
-import { subscriptionList } from "../constants/user-constants";
+import { subscriptionList } from "../constants/user-constants.js";
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
 const userSchema = new Schema(
   {

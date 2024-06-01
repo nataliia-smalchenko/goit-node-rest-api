@@ -4,31 +4,26 @@ function listContacts(filter = {}) {
   return Contact.find(filter);
 }
 
-function getContactById(contactId) {
-  return Contact.findById(contactId);
+function getContact(filter) {
+  return Contact.findOne(filter);
 }
 
-function removeContact(contactId) {
-  return Contact.findByIdAndDelete(contactId);
+function removeContact(filter) {
+  return Contact.findOneAndDelete(filter);
 }
 
 function addContact(data) {
   return Contact.create(data);
 }
 
-function updateOneContact(contactId, data) {
-  return Contact.findByIdAndUpdate(contactId, data);
-}
-
-function updateStatusContact(contactId, data) {
-  return Contact.findByIdAndUpdate(contactId, data);
+function updateOneContact(filter, data) {
+  return Contact.findOneAndUpdate(filter, data);
 }
 
 export default {
   listContacts,
-  getContactById,
+  getContact,
   removeContact,
   addContact,
   updateOneContact,
-  updateStatusContact,
 };
