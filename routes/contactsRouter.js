@@ -1,37 +1,34 @@
 import express from "express";
-import {
-  getAllContacts,
-  getOneContact,
-  deleteContact,
-  createContact,
-  updateContact,
-  updateStatus,
-} from "../controllers/contactsControllers.js";
+import contactsControllers from "../controllers/contactsControllers.js";
 import {
   createContactSchema,
   updateContactSchema,
   updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
-import validateBody from "../helpers/validateBody.js";
-import validateId from "../helpers/validateObjectId.js";
-import isEmptyBody from "../helpers/isEmptyBody.js";
+import validateBody from "../decorators/validateBody.js";
+import validateId from "../decorators/validateObjectId.js";
+import isEmptyBody from "../decorators/isEmptyBody.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", contactsControllers.getAllContacts);
 
-contactsRouter.get("/:id", validateId, getOneContact);
+contactsRouter.get("/:id", validateId, contactsControllers.getOneContact);
 
-contactsRouter.delete("/:id", validateId, deleteContact);
+contactsRouter.delete("/:id", validateId, contactsControllers.deleteContact);
 
-contactsRouter.post("/", validateBody(createContactSchema), createContact);
+contactsRouter.post(
+  "/",
+  validateBody(createContactSchema),
+  contactsControllers.createContact
+);
 
 contactsRouter.put(
   "/:id",
   isEmptyBody,
   validateId,
   validateBody(updateContactSchema),
-  updateContact
+  contactsControllers.updateContact
 );
 
 contactsRouter.patch(
@@ -39,7 +36,7 @@ contactsRouter.patch(
   isEmptyBody,
   validateId,
   validateBody(updateStatusContactSchema),
-  updateStatus
+  contactsControllers.updateStatus
 );
 
 export default contactsRouter;
