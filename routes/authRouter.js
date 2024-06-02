@@ -1,7 +1,11 @@
 import express from "express";
 import validateBody from "../middlewares/validateBody.js";
 import isEmptyBody from "../middlewares/isEmptyBody.js";
-import { authSigninSchema, authSignupSchema } from "../schemas/authSchemas.js";
+import {
+  authEmailSchema,
+  authSigninSchema,
+  authSignupSchema,
+} from "../schemas/authSchemas.js";
 import authControllers from "../controllers/authControllers.js";
 import authenticate from "../middlewares/authenticate.js";
 import upload from "../middlewares/upload.js";
@@ -13,6 +17,15 @@ authRouter.post(
   isEmptyBody,
   validateBody(authSignupSchema),
   authControllers.signup
+);
+
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post(
+  "/verify",
+  isEmptyBody,
+  validateBody(authEmailSchema),
+  authControllers.resendVerify
 );
 
 authRouter.post(
